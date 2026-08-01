@@ -227,12 +227,14 @@ func synchronizedLicenseSelection(
   return selection
 }
 
-/// HTTP(S) 외의 스킴을 링크로 열지 않도록 저장소 주소를 검증합니다.
+/// HTTP(S) 스킴과 호스트를 모두 갖춘 저장소 주소인지 검증합니다.
 func openSourceLicenseRepositoryURL(from value: String) -> URL? {
   guard
     let url = URL(string: value),
     let scheme = url.scheme?.lowercased(),
-    scheme == "https" || scheme == "http"
+    scheme == "https" || scheme == "http",
+    let host = url.host,
+    !host.isEmpty
   else {
     return nil
   }
