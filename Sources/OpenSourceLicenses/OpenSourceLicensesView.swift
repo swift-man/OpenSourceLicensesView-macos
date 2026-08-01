@@ -186,6 +186,9 @@ private extension OpenSourceLicenseDetailView {
       if let repositoryURL {
         Link(license.repositoryURL, destination: repositoryURL)
           .font(.callout)
+          .lineLimit(1)
+          .truncationMode(.middle)
+          .help(license.repositoryURL)
       } else {
         Text(license.repositoryURL)
           .font(.callout)
