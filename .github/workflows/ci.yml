@@ -14,6 +14,36 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  workflow-lint:
+    name: Workflow lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Download and verify actionlint
+        env:
+          ACTIONLINT_VERSION: 1.7.12
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          install_dir="${RUNNER_TEMP}/actionlint-bin"
+          archive="${RUNNER_TEMP}/actionlint_${ACTIONLINT_VERSION}_linux_amd64.tar.gz"
+          mkdir -p "$install_dir"
+          gh release download "v${ACTIONLINT_VERSION}" \
+            --repo rhysd/actionlint \
+            --pattern "actionlint_${ACTIONLINT_VERSION}_linux_amd64.tar.gz" \
+            --output "$archive"
+          gh attestation verify \
+            --repo rhysd/actionlint \
+            "$archive"
+          tar -xzf "$archive" -C "$install_dir" actionlint
+          printf '%s\n' "$install_dir" >> "$GITHUB_PATH"
+
+      - name: Lint workflow files
+        run: actionlint -color
+
   minimum-supported:
     name: Swift 6.0 / macOS 15
     runs-on: macos-15
