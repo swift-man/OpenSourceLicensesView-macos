@@ -179,4 +179,7 @@ if [[ "$default_path_status" -ne 0 ]]; then
 fi
 assert_log_contains "COMMAND issue list"
 
-printf 'PASS: 12 actionlint tracker scenarios\n'
+run_tracker 0 $'1.7.12\r' "v1.7.12" ""
+assert_log_contains "COMMAND issue list"
+
+printf 'PASS: 13 actionlint tracker scenarios\n'

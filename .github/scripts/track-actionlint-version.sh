@@ -30,6 +30,7 @@ validate_version() {
 read_configured_version() {
   local configured_version
   configured_version="$(< "$version_file")"
+  configured_version="${configured_version%$'\r'}"
   validate_version configured "$configured_version" || return $?
   printf '%s\n' "$configured_version"
 }
