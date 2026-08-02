@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  minimum-supported:
+    name: Swift 5.9 / macOS 14
+    runs-on: macos-14
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_15.0.1.app/Contents/Developer
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Verify Swift 5.9 toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          swift_version="$(swift --version)"
+          printf '%s\n' "$swift_version"
+          grep -Eq 'Apple Swift version 5\.9([.[:space:]]|$)' <<< "$swift_version"
+
+      - name: Build package
+        run: swift build
+
+      - name: Run tests
+        run: swift test

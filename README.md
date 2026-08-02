@@ -1,5 +1,7 @@
 # OpenSourceLicenses
 
+[![CI](https://github.com/swift-man/OpenSourceLicensesView-macos/actions/workflows/ci.yml/badge.svg)](https://github.com/swift-man/OpenSourceLicensesView-macos/actions/workflows/ci.yml)
+
 외부에서 준비한 오픈소스 라이선스 목록을 macOS `NavigationSplitView`로 표시하는 Swift Package입니다.
 
 패키지는 JSON 파일, 앱 번들, 로딩 정책을 소유하지 않습니다. 호스트 앱이 데이터를 로딩하고 현지화한 표시 문구와 함께 주입합니다.
@@ -28,6 +30,8 @@ OpenSourceLicensesView(
 
 - macOS 14 이상
 - Swift 5.9 이상
+
+CI는 macOS 14와 Xcode 15.0.1을 사용해 최소 지원 Swift 5.9 환경에서 빌드와 테스트를 검증합니다.
 
 ## 라이선스
 
