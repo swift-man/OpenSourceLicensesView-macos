@@ -31,7 +31,7 @@ OpenSourceLicensesView(
 - macOS 14 이상
 - Swift 5.9 이상
 
-CI는 macOS 14와 Xcode 15.0.1을 사용해 최소 지원 Swift 5.9 환경에서 빌드와 테스트를 검증합니다.
+CI는 지원 중인 macOS runner에 Swift 5.9.2 툴체인을 설치해 최소 지원 Swift 버전에서 빌드와 테스트를 검증합니다.
 
 ## 라이선스
 
