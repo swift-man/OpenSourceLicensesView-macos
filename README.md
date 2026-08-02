@@ -33,6 +33,8 @@ OpenSourceLicensesView(
 
 CI는 Xcode 16.0의 Swift 6.0과 현재 macOS toolchain에서 전체 SwiftUI 패키지를 빌드하고 테스트합니다.
 
+릴리스별 변경 사항은 [변경 이력](CHANGELOG.md)에서 확인할 수 있습니다.
+
 ## 라이선스
 
 이 패키지는 [MIT License](LICENSE)로 배포됩니다.
