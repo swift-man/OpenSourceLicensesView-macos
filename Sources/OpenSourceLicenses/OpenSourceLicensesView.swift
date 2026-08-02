@@ -6,8 +6,6 @@
 //
 
 import Foundation
-
-#if canImport(SwiftUI)
 import SwiftUI
 
 /// 외부에서 주입한 오픈소스 패키지 목록과 선택한 라이선스 전문을 표시합니다.
@@ -215,7 +213,6 @@ private extension OpenSourceLicenseDetailView {
       .frame(maxWidth: .infinity, alignment: .leading)
   }
 }
-#endif
 
 /// 기존 선택이 유효하면 유지하고, 아니면 새 목록의 첫 항목을 선택합니다.
 func synchronizedLicenseSelection(

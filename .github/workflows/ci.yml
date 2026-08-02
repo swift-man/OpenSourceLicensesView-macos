@@ -15,24 +15,21 @@ concurrency:
 
 jobs:
   minimum-supported:
-    name: Swift 5.9.2 / Ubuntu 22.04
-    runs-on: ubuntu-22.04
+    name: Swift 6.0 / macOS 15
+    runs-on: macos-15
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_16.0.app/Contents/Developer
     steps:
       - name: Check out repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
-      - name: Install Swift 5.9.2
-        uses: swift-actions/setup-swift@7ca6abe6b3b0e8b5421b88be48feee39cbf52c6a # v2.4.0
-        with:
-          swift-version: "5.9.2"
-
-      - name: Verify Swift 5.9 toolchain
+      - name: Verify Swift 6.0 toolchain
         shell: bash
         run: |
           set -euo pipefail
           swift_version="$(swift --version)"
           printf '%s\n' "$swift_version"
-          grep -Eq 'Swift version 5\.9([.[:space:]]|$)' <<< "$swift_version"
+          grep -Eq 'Apple Swift version 6\.0([.[:space:]]|$)' <<< "$swift_version"
 
       - name: Build package
         run: swift build

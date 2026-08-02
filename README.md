@@ -29,9 +29,9 @@ OpenSourceLicensesView(
 ## 요구 사항
 
 - macOS 14 이상
-- Swift 5.9 이상
+- Swift 6.0 이상
 
-CI는 Ubuntu에서 Swift 5.9.2 기반 모델과 핵심 로직을 검증하고, 지원 중인 macOS runner에서 전체 SwiftUI 패키지를 빌드하고 테스트합니다.
+CI는 Xcode 16.0의 Swift 6.0과 현재 macOS toolchain에서 전체 SwiftUI 패키지를 빌드하고 테스트합니다.
 
 ## 라이선스
 
