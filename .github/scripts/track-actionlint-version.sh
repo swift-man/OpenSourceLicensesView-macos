@@ -7,6 +7,15 @@ repository="${GITHUB_REPOSITORY:?GITHUB_REPOSITORY is required}"
 version_file="${ACTIONLINT_VERSION_FILE:-.github/actionlint-version}"
 version_pattern='^[0-9]+\.[0-9]+\.[0-9]+$'
 
+require_command() {
+  local command_name="$1"
+
+  if ! command -v "$command_name" > /dev/null 2>&1; then
+    printf 'Required command is unavailable: %s\n' "$command_name" >&2
+    return 1
+  fi
+}
+
 validate_version() {
   local label="$1"
   local version="$2"
@@ -20,26 +29,30 @@ validate_version() {
 read_configured_version() {
   local configured_version
   configured_version="$(< "$version_file")"
-  validate_version configured "$configured_version" || return 1
+  validate_version configured "$configured_version" || return $?
   printf '%s\n' "$configured_version"
 }
 
 fetch_latest_version() {
   local latest_tag
   local latest_version
-  latest_tag="$(gh api repos/rhysd/actionlint/releases/latest --jq .tag_name)"
+  latest_tag="$(gh api repos/rhysd/actionlint/releases/latest --jq .tag_name)" || return $?
   latest_version="${latest_tag#v}"
-  validate_version latest "$latest_version" || return 1
+  validate_version latest "$latest_version" || return $?
   printf '%s\n' "$latest_version"
 }
 
 find_issue_number() {
+  local search_query
+  search_query="\"${issue_title}\" in:title"
+
   gh issue list \
     --repo "$repository" \
     --state open \
-    --search '"ci: update actionlint" in:title' \
+    --search "$search_query" \
     --json number,title \
-    --jq 'map(select(.title == "ci: update actionlint")) | .[0].number // empty'
+    | jq -r --arg title "$issue_title" \
+      'map(select(.title == $title)) | .[0].number // empty'
 }
 
 close_current_issue() {
@@ -79,19 +92,21 @@ main() {
   local latest_version
   local issue_number
 
-  configured_version="$(read_configured_version)" || return 1
-  latest_version="$(fetch_latest_version)" || return 1
-  issue_number="$(find_issue_number)" || return 1
+  require_command gh || return $?
+  require_command jq || return $?
+  configured_version="$(read_configured_version)" || return $?
+  latest_version="$(fetch_latest_version)" || return $?
+  issue_number="$(find_issue_number)" || return $?
 
   if [[ "$configured_version" == "$latest_version" ]]; then
     if [[ -n "$issue_number" ]]; then
-      close_current_issue "$issue_number" "$configured_version" || return 1
+      close_current_issue "$issue_number" "$configured_version" || return $?
     fi
     printf 'actionlint %s is current.\n' "$configured_version"
     return 0
   fi
 
-  upsert_update_issue "$configured_version" "$latest_version" "$issue_number" || return 1
+  upsert_update_issue "$configured_version" "$latest_version" "$issue_number" || return $?
   printf 'actionlint %s is outdated; latest is %s.\n' \
     "$configured_version" \
     "$latest_version" >&2

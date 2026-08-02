@@ -13,7 +13,12 @@ version_file="$test_directory/actionlint-version"
 mkdir -p "$mock_directory"
 
 cleanup() {
-  rm -r -- "$test_directory"
+  local directory="${test_directory:?test directory must be set}"
+  if [[ "$directory" == "/" ]]; then
+    printf 'Refusing to remove root directory\n' >&2
+    return 1
+  fi
+  rm -r -- "$directory"
 }
 
 trap cleanup EXIT
@@ -31,12 +36,21 @@ command_name="${1:-} ${2:-}"
   printf '\n'
 } >> "${GH_MOCK_LOG:?GH_MOCK_LOG is required}"
 
+if [[ "$command_name" == "${GH_MOCK_FAIL_COMMAND:-}" ]]; then
+  exit "${GH_MOCK_FAILURE_STATUS:-17}"
+fi
+
 case "$command_name" in
   "api repos/rhysd/actionlint/releases/latest")
     printf '%s\n' "${GH_MOCK_LATEST_TAG:?GH_MOCK_LATEST_TAG is required}"
     ;;
   "issue list")
-    printf '%s' "${GH_MOCK_ISSUE_NUMBER:-}"
+    if [[ -n "${GH_MOCK_ISSUE_NUMBER:-}" ]]; then
+      printf '[{"number":%s,"title":"ci: update actionlint"}]\n' \
+        "$GH_MOCK_ISSUE_NUMBER"
+    else
+      printf '[]\n'
+    fi
     ;;
   "issue close" | "issue edit")
     ;;
@@ -73,6 +87,7 @@ run_tracker() {
   local configured_version="$2"
   local latest_tag="$3"
   local issue_number="$4"
+  local fail_command="${5:-}"
   local actual_status
 
   : > "$mock_log"
@@ -81,6 +96,8 @@ run_tracker() {
   set +e
   PATH="$mock_directory:$PATH" \
     ACTIONLINT_VERSION_FILE="$version_file" \
+    GH_MOCK_FAIL_COMMAND="$fail_command" \
+    GH_MOCK_FAILURE_STATUS=17 \
     GH_MOCK_ISSUE_NUMBER="$issue_number" \
     GH_MOCK_LATEST_TAG="$latest_tag" \
     GH_MOCK_LOG="$mock_log" \
@@ -129,4 +146,20 @@ run_tracker 1 "1.7.12" "not-a-version" ""
 assert_log_contains "COMMAND api repos/rhysd/actionlint/releases/latest"
 assert_log_excludes "COMMAND issue list"
 
-printf 'PASS: 6 actionlint tracker scenarios\n'
+run_tracker 17 "1.7.12" "v1.7.12" "" \
+  "api repos/rhysd/actionlint/releases/latest"
+assert_log_excludes "COMMAND issue list"
+
+run_tracker 17 "1.7.12" "v1.7.12" "" "issue list"
+assert_log_excludes "COMMAND issue close"
+
+run_tracker 17 "1.7.12" "v1.7.12" "42" "issue close"
+assert_log_contains "COMMAND issue close"
+
+run_tracker 17 "1.7.11" "v1.7.12" "" "issue create"
+assert_log_contains "COMMAND issue create"
+
+run_tracker 17 "1.7.11" "v1.7.12" "42" "issue edit"
+assert_log_contains "COMMAND issue edit"
+
+printf 'PASS: 11 actionlint tracker scenarios\n'
