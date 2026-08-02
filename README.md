@@ -31,7 +31,7 @@ OpenSourceLicensesView(
 - macOS 14 이상
 - Swift 5.9 이상
 
-CI는 지원 중인 macOS runner에 Swift 5.9.2 툴체인을 설치해 최소 지원 Swift 버전에서 빌드와 테스트를 검증합니다.
+CI는 Ubuntu에서 Swift 5.9.2 기반 모델과 핵심 로직을 검증하고, 지원 중인 macOS runner에서 전체 SwiftUI 패키지를 빌드하고 테스트합니다.
 
 ## 라이선스
 
