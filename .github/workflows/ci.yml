@@ -28,6 +28,7 @@ jobs:
         run: |
           set -euo pipefail
           actionlint_version="$(< .github/actionlint-version)"
+          actionlint_version="${actionlint_version%$'\r'}"
           if [[ ! "$actionlint_version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
             echo "Invalid actionlint version: $actionlint_version" >&2
             exit 1
@@ -48,6 +49,12 @@ jobs:
 
       - name: Lint workflow files
         run: actionlint -color
+
+      - name: Lint maintenance scripts
+        run: shellcheck .github/scripts/*.sh .github/scripts/tests/*.sh
+
+      - name: Test actionlint version tracker
+        run: .github/scripts/tests/test-track-actionlint-version.sh
 
   minimum-supported:
     name: Swift 6.0 / macOS 15
