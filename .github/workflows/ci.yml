@@ -28,7 +28,9 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          install_dir="${RUNNER_TEMP}/actionlint-bin"
           archive="${RUNNER_TEMP}/actionlint_${ACTIONLINT_VERSION}_linux_amd64.tar.gz"
+          mkdir -p "$install_dir"
           gh release download "v${ACTIONLINT_VERSION}" \
             --repo rhysd/actionlint \
             --pattern "actionlint_${ACTIONLINT_VERSION}_linux_amd64.tar.gz" \
@@ -36,8 +38,8 @@ jobs:
           gh attestation verify \
             --repo rhysd/actionlint \
             "$archive"
-          tar -xzf "$archive" -C "$RUNNER_TEMP" actionlint
-          printf '%s\n' "$RUNNER_TEMP" >> "$GITHUB_PATH"
+          tar -xzf "$archive" -C "$install_dir" actionlint
+          printf '%s\n' "$install_dir" >> "$GITHUB_PATH"
 
       - name: Lint workflow files
         run: actionlint -color
