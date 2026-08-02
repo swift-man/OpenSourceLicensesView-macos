@@ -5,6 +5,7 @@
 //  Created by SwiftMan on 8/2/26.
 //
 
+import Foundation
 import SwiftUI
 
 /// 외부에서 주입한 오픈소스 패키지 목록과 선택한 라이선스 전문을 표시합니다.
