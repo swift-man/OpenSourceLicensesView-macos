@@ -32,7 +32,7 @@ jobs:
           set -euo pipefail
           swift_version="$(swift --version)"
           printf '%s\n' "$swift_version"
-          grep -Eq 'Apple Swift version 5\.9([.[:space:]]|$)' <<< "$swift_version"
+          grep -Eq 'Swift version 5\.9([.[:space:]]|$)' <<< "$swift_version"
 
       - name: Build package
         run: swift build
