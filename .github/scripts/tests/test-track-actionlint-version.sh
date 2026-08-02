@@ -162,4 +162,21 @@ assert_log_contains "COMMAND issue create"
 run_tracker 17 "1.7.11" "v1.7.12" "42" "issue edit"
 assert_log_contains "COMMAND issue edit"
 
-printf 'PASS: 11 actionlint tracker scenarios\n'
+: > "$mock_log"
+set +e
+(
+  cd "$test_directory" || exit 1
+  PATH="$mock_directory:$PATH" \
+    GH_MOCK_LATEST_TAG="v1.7.12" \
+    GH_MOCK_LOG="$mock_log" \
+    GITHUB_REPOSITORY="example/repository" \
+    "$tracker" > "$stdout_log" 2> "$stderr_log"
+)
+default_path_status=$?
+set -e
+if [[ "$default_path_status" -ne 0 ]]; then
+  fail "tracker should find its default version file outside the repository"
+fi
+assert_log_contains "COMMAND issue list"
+
+printf 'PASS: 12 actionlint tracker scenarios\n'

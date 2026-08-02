@@ -4,7 +4,8 @@ set -euo pipefail
 
 issue_title="ci: update actionlint"
 repository="${GITHUB_REPOSITORY:?GITHUB_REPOSITORY is required}"
-version_file="${ACTIONLINT_VERSION_FILE:-.github/actionlint-version}"
+github_directory="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+version_file="${ACTIONLINT_VERSION_FILE:-$github_directory/actionlint-version}"
 version_pattern='^[0-9]+\.[0-9]+\.[0-9]+$'
 
 require_command() {
