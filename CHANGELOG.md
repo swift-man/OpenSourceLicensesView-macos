@@ -7,6 +7,16 @@
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-08-02
+
+### Added
+
+- 릴리스 버전을 한 줄로 확인할 수 있는 `VERSION.txt`와 누적 변경 이력 제공
+
+### Changed
+
+- GitHub Actions의 저장소 체크아웃을 `actions/checkout` v7.0.1로 갱신하고 전체 커밋 SHA로 고정
+
 ## [0.1.0] - 2026-08-02
 
 ### Added
@@ -25,5 +35,6 @@
 
 - 저장소 링크를 유효한 호스트가 있는 HTTP 또는 HTTPS URL로 제한
 
-[Unreleased]: https://github.com/swift-man/OpenSourceLicensesView-macos/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/swift-man/OpenSourceLicensesView-macos/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/swift-man/OpenSourceLicensesView-macos/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/swift-man/OpenSourceLicensesView-macos/releases/tag/v0.1.0
