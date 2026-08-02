@@ -49,6 +49,12 @@ jobs:
       - name: Lint workflow files
         run: actionlint -color
 
+      - name: Lint maintenance scripts
+        run: shellcheck .github/scripts/*.sh .github/scripts/tests/*.sh
+
+      - name: Test actionlint version tracker
+        run: .github/scripts/tests/test-track-actionlint-version.sh
+
   minimum-supported:
     name: Swift 6.0 / macOS 15
     runs-on: macos-15
