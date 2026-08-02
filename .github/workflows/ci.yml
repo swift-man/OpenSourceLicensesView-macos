@@ -23,17 +23,22 @@ jobs:
 
       - name: Download and verify actionlint
         env:
-          ACTIONLINT_VERSION: 1.7.12
           GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
           set -euo pipefail
+          actionlint_version="$(< .github/actionlint-version)"
+          if [[ ! "$actionlint_version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Invalid actionlint version: $actionlint_version" >&2
+            exit 1
+          fi
+
           install_dir="${RUNNER_TEMP}/actionlint-bin"
-          archive="${RUNNER_TEMP}/actionlint_${ACTIONLINT_VERSION}_linux_amd64.tar.gz"
+          archive="${RUNNER_TEMP}/actionlint_${actionlint_version}_linux_amd64.tar.gz"
           mkdir -p "$install_dir"
-          gh release download "v${ACTIONLINT_VERSION}" \
+          gh release download "v${actionlint_version}" \
             --repo rhysd/actionlint \
-            --pattern "actionlint_${ACTIONLINT_VERSION}_linux_amd64.tar.gz" \
+            --pattern "actionlint_${actionlint_version}_linux_amd64.tar.gz" \
             --output "$archive"
           gh attestation verify \
             --repo rhysd/actionlint \
