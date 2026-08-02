@@ -22,5 +22,5 @@ let package = Package(
       dependencies: ["OpenSourceLicenses"]
     )
   ],
-  swiftLanguageModes: [.v5]
+  swiftLanguageModes: [.v6]
 )

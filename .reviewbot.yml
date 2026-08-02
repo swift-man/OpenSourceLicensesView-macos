@@ -7,6 +7,7 @@ review:
     - "**/Info.plist"
     - ".github/workflows/**/*.yml"
     - ".github/workflows/**/*.yaml"
+    - ".github/dependabot.yml"
     - ".reviewbot.yml"
     - ".gitignore"
     - "AGENTS.md"
@@ -86,4 +87,5 @@ review:
     - "Package.swift"
     - ".github/workflows/**/*.yml"
     - ".github/workflows/**/*.yaml"
+    - ".github/dependabot.yml"
     - "Sources/**/*.docc/**/*.md"
