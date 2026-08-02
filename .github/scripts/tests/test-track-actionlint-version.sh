@@ -88,6 +88,7 @@ link_command dirname "$missing_gh_directory"
 link_command jq "$missing_gh_directory"
 link_command bash "$missing_jq_directory"
 link_command dirname "$missing_jq_directory"
+# Use the mock gh so the jq preflight stays isolated from the real GitHub CLI.
 ln -s "$mock_directory/gh" "$missing_jq_directory/gh"
 
 run_test() {
@@ -158,8 +159,10 @@ run_tracker_with_restricted_path() {
   local actual_status
 
   : > "$mock_log"
+  printf '1.7.12\n' > "$version_file"
   set +e
   PATH="$restricted_path" \
+    ACTIONLINT_VERSION_FILE="$version_file" \
     GITHUB_REPOSITORY="example/repository" \
     "$tracker" > "$stdout_log" 2> "$stderr_log"
   actual_status=$?
